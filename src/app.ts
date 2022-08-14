@@ -1,16 +1,11 @@
-import { PromptService } from './core/prompt/prompt.service';
-export class App {
-	public async run() {
-		console.log('Run app');
-		const res = await new PromptService().input<number>(
-			'Enter width',
-			'number'
-		);
+import { DirExecuter } from './commands/dir/dir.executor';
+import { ConsoleLogger } from './out/console-logger/console-logger';
 
-		console.log(res);
+export class App {
+	async run() {
+		new DirExecuter(ConsoleLogger.getInstance()).execute();
 	}
 }
 
 const app = new App();
-
 app.run();
