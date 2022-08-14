@@ -1,3 +1,5 @@
+import path from 'path';
+
 export class FFMpegBuilder {
 	private inputDir: string = '';
 	private inputFile: string = '';
@@ -34,29 +36,18 @@ export class FFMpegBuilder {
 
 		const { inputDir, inputFile, outputDir, outputFile } = this;
 
-		const inputPath = this.isPathHasEndSlash(inputDir)
-			? `${inputDir}${inputFile}`
-			: `${inputDir}/${inputFile}`;
+		const inputPath = path.join(inputDir, inputFile);
+		const outputPath = path.join(outputDir, outputFile);
+		const args = ['-i', inputPath];
 
-        const outputPath = this.isPathHasEndSlash(outputDir)
-			? `${outputDir}${outputFile}`
-			: `${outputDir}/${outputFile}`;
+		this.options.forEach((value, key) => {
+			args.push(key);
+			args.push(value);
+		});
 
-        const args = ['-i', inputPath];
+		args.push(outputPath);
 
-        this.options.forEach((value, key) => {
-            args.push(key);
-            args.push(value);
-        });
-
-        args.push(outputPath);
-        
-        return args;
-	}
-
-	private isPathHasEndSlash(dir: string) {
-		const lastChar = dir[dir.length - 1];
-		return lastChar === '/';
+		return args;
 	}
 
 	private validate(): void {
